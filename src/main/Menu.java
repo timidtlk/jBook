@@ -26,7 +26,7 @@ public class Menu extends JPanel {
 
         fm = new FontManager();
 
-        setPreferredSize(new Dimension(300, 315));
+        setPreferredSize(new Dimension(280, 315));
         setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
@@ -36,7 +36,7 @@ public class Menu extends JPanel {
 
     private void initComponents() {
         titleLabel = new JLabel("jBook");
-        subTitleLabel = new JLabel("feito por Gustavo Gil e Emilly Caxias");
+        subTitleLabel = new JLabel("Feito por Gustavo Gil e Emilly Caxias");
 
         titleLabel.setFont(fm.getTitle());
         titleLabel.setAlignmentX(CENTER_ALIGNMENT);
