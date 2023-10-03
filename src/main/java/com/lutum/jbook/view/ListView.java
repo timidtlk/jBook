@@ -102,6 +102,16 @@ public class ListView extends JPanel {
         }
     }
 
+    public void atualiza() {
+        String[][] busca = frameController.buscar("");
+        
+        for (int i = 0; i < busca.length; i++) {
+            for (int j = 0; j < busca[0].length; j++) {
+                tableList.setValueAt(busca[i][j], i, j);
+            }
+        }
+    }
+
     private class ButtonHandler implements ActionListener {
 
         @Override

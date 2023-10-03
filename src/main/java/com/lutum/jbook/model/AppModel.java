@@ -11,12 +11,13 @@ import com.lutum.jbook.model.VO.LivroVO;
 
 public class AppModel {
     
-    ArrayList<LivroVO> livros;
+    private ArrayList<LivroVO> livros;
+    private SimpleDateFormat formatter;
 
     public AppModel() {
         this.livros = new ArrayList<>();
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        formatter = new SimpleDateFormat("dd/MM/yyyy");
 
         Date capitalDate = null;
         Date existenDate = null;
@@ -73,8 +74,40 @@ public class AppModel {
 
     }
 
-    public void create() {
+    /**
+     * Cria um registro de livro no ArrayList
+     * 
+     * @param id
+     * @param titulo
+     * @param autor
+     * @param data
+     * @param qtdExemplares
+     * 
+     * @return Mensagem do message dialog e codigo de erro
+     */
+    public String create(int id, String titulo, String autor, String data, int qtdExemplares) {
         
+        if ( titulo.isBlank() || autor.isBlank() || data.isBlank()) {
+            return "Preencha todos os campos para cadastrar um livro@inf";
+        }
+
+        for (LivroVO livro : this.livros) {
+            if (livro.getId() == id) {
+                return "Já existe um livro cadastrado com esse ID@err";
+            }
+        }
+
+        Date dtPubli = null;
+
+        try {
+            dtPubli = formatter.parse(data);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        this.livros.add(new LivroVO(id, titulo, autor, dtPubli, qtdExemplares));
+        
+        return "Livro cadastrado com sucesso@suc";
     }
 
 }

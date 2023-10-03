@@ -11,6 +11,7 @@ import java.util.Calendar;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -130,6 +131,39 @@ public class CreateView extends JPanel {
 
     }
 
+    protected void create() {
+        
+        int id        = (int) idSpinner.getValue();
+        String titulo = titleField.getText();
+        String autor  = autorField.getText();
+        String data   = dtField.getText();
+        int qtd       = (int) qtdSpinner.getValue(); 
+
+        String create = frameController.create(id, titulo, autor, data, qtd);
+        String[] message = create.split("@");
+
+        int type = JOptionPane.PLAIN_MESSAGE;
+        String titleMessage = "Sucesso";
+
+        switch (message[1]) {
+            case "err":
+                type = JOptionPane.ERROR_MESSAGE;
+                titleMessage = "Erro";
+                break;
+            case "inf":
+                type = JOptionPane.INFORMATION_MESSAGE;
+                titleMessage = "Campos Vazios";
+                break;
+            default:
+                break;
+        }
+
+        frameController.atualizaTabela();
+        JOptionPane.showMessageDialog(null, message[0], titleMessage, type);
+        clean();
+
+    }
+
     private class ButtonHandler implements ActionListener {
 
         @Override
@@ -141,6 +175,8 @@ public class CreateView extends JPanel {
                 clean();
             } else if (src == closeButton) {
                 frameController.changeToScreen(0, 280, 320);
+            } else {
+                create();
             }
                         
         }

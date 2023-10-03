@@ -73,4 +73,12 @@ public class FrameController extends JFrame {
     public String[][] buscar(String busca) {
         return appModel.buscar(busca);
     }
+
+    public String create(int id, String titulo, String autor, String data, int qtdExemplares) {
+        return appModel.create(id, titulo, autor, data, qtdExemplares);
+    }
+
+    public void atualizaTabela() {
+        listPanel.atualiza();
+    }
 }
