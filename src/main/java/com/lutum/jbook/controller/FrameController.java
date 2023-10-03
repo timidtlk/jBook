@@ -9,6 +9,7 @@ import com.lutum.jbook.model.AppModel;
 import com.lutum.jbook.view.CreateView;
 import com.lutum.jbook.view.ListView;
 import com.lutum.jbook.view.MenuView;
+import com.lutum.jbook.view.UpdateView;
 
 public class FrameController extends JFrame {
 
@@ -17,6 +18,7 @@ public class FrameController extends JFrame {
     private MenuView   menuPanel;
     private CreateView createPanel;
     private ListView   listPanel;
+    private UpdateView updatePanel;
     
     public FrameController() {
 
@@ -24,11 +26,13 @@ public class FrameController extends JFrame {
         menuPanel   = new MenuView(this);
         createPanel = new CreateView(this);
         listPanel   = new ListView(appModel.getDados(), this);
+        updatePanel = new UpdateView(this);
 
         layout = new JPanel(new CardLayout());
         layout.add(menuPanel);
         layout.add(createPanel);
         layout.add(listPanel);
+        layout.add(updatePanel);
 
         setTitle("jBook");
         setDefaultCloseOperation(EXIT_ON_CLOSE);

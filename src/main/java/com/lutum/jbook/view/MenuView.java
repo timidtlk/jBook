@@ -27,7 +27,6 @@ public class MenuView extends JPanel {
     private JButton readButton;
     private JButton updateButton;
     private JButton deleteButton;
-    private JButton searchButton;
 
     /**
      * Para conseguir trocar de telas, todas as classes de painel recebem o frameController para poderem trocar de telas
@@ -68,6 +67,7 @@ public class MenuView extends JPanel {
 
         updateButton = new JButton("Atualizar Livro");
         updateButton.setAlignmentX(CENTER_ALIGNMENT);
+        updateButton.addActionListener(handler);
 
         deleteButton = new JButton("Remover Livro");
         deleteButton.setAlignmentX(CENTER_ALIGNMENT);
@@ -95,6 +95,8 @@ public class MenuView extends JPanel {
                 frameController.changeToScreen(1, 270, 200);
             } else if (src == readButton) {
                 frameController.changeToScreen(2,494, 503);
+            } else if (src == updateButton) {
+                frameController.changeToScreen(3, 270, 207);
             }
                         
         }
