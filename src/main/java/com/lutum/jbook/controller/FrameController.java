@@ -5,29 +5,36 @@ import java.awt.CardLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.lutum.jbook.model.AppModel;
 import com.lutum.jbook.view.CreateView;
+import com.lutum.jbook.view.ListView;
 import com.lutum.jbook.view.MenuView;
 
 public class FrameController extends JFrame {
 
     private JPanel     layout;
+    private AppModel   appModel;
     private MenuView   menuPanel;
     private CreateView createPanel;
+    private ListView   listPanel;
     
     public FrameController() {
 
+        appModel    = new AppModel();
         menuPanel   = new MenuView(this);
         createPanel = new CreateView(this);
+        listPanel   = new ListView(appModel.getDados(), this);
 
         layout = new JPanel(new CardLayout());
         layout.add(menuPanel);
         layout.add(createPanel);
+        layout.add(listPanel);
 
         setTitle("jBook");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
 
-        setSize(280, 340);
+        setSize(280, 320);
 
         add(layout);
 
@@ -56,6 +63,14 @@ public class FrameController extends JFrame {
         layout.getComponent(actualPanel).setVisible(false);
         setSize(width, height);
         setLocationRelativeTo(null);
+
+        if (screen == 2)
+            listPanel.setDados(appModel.getDados());
+
         layout.getComponent(screen).setVisible(true);
+    }
+
+    public String[][] buscar(String busca) {
+        return appModel.buscar(busca);
     }
 }

@@ -40,7 +40,7 @@ public class MenuView extends JPanel {
         fm = new FontManager();
         this.frameController = frameController;
 
-        setPreferredSize(new Dimension(280, 315));
+        setPreferredSize(new Dimension(280, 295));
         setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
@@ -64,6 +64,7 @@ public class MenuView extends JPanel {
 
         readButton   = new JButton("Listar Livros");
         readButton.setAlignmentX(CENTER_ALIGNMENT);
+        readButton.addActionListener(handler);
 
         updateButton = new JButton("Atualizar Livro");
         updateButton.setAlignmentX(CENTER_ALIGNMENT);
@@ -71,17 +72,12 @@ public class MenuView extends JPanel {
         deleteButton = new JButton("Remover Livro");
         deleteButton.setAlignmentX(CENTER_ALIGNMENT);
 
-        searchButton = new JButton("Buscar Livro");
-        searchButton.setAlignmentX(CENTER_ALIGNMENT);
-
         add(titleLabel);
         add(subTitleLabel);
         add(Box.createVerticalStrut(25));
         add(createButton);
         add(Box.createVerticalStrut(6));
         add(updateButton);
-        add(Box.createVerticalStrut(6));
-        add(searchButton);
         add(Box.createVerticalStrut(6));
         add(readButton);
         add(Box.createVerticalStrut(6));
@@ -97,6 +93,8 @@ public class MenuView extends JPanel {
 
             if (src == createButton) {
                 frameController.changeToScreen(1, 270, 200);
+            } else if (src == readButton) {
+                frameController.changeToScreen(2,494, 503);
             }
                         
         }

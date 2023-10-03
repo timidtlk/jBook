@@ -52,7 +52,7 @@ public class CreateView extends JPanel {
         this.decFormat = new DecimalFormat("00");
         this.fm = new FontManager();
         this.frameController = frameController;
-        this.handler = new ButtonHandler(this);
+        this.handler = new ButtonHandler();
 
         setLayout(new FlowLayout(FlowLayout.LEFT));
 
@@ -132,21 +132,15 @@ public class CreateView extends JPanel {
 
     private class ButtonHandler implements ActionListener {
 
-        private CreateView screen;
-
-        public ButtonHandler(CreateView screen) {
-            this.screen = screen;
-        }
-
         @Override
         public void actionPerformed(ActionEvent e) {
             
             Object src = e.getSource();
 
             if (src == cleanButton) {
-                screen.clean();
+                clean();
             } else if (src == closeButton) {
-                frameController.changeToScreen(0, 280, 340);
+                frameController.changeToScreen(0, 280, 320);
             }
                         
         }

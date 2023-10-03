@@ -1,46 +1,41 @@
 package com.lutum.jbook.view;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.text.ParseException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.SpinnerModel;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.text.MaskFormatter;
 
-import com.lutum.jbook.view.utils.FontManager;
+import com.lutum.jbook.controller.FrameController;
 
 public class ListView extends JPanel {
     
-    private FontManager fm;
+    private ButtonHandler   handler;
+    private FrameController frameController;
 
-    private JLabel idLabel;
-    private JLabel titleLabel;
-    private JLabel autorLabel;
-    private JLabel dtLabel;
-    private JLabel qtdLabel;
+    private JTable tableList;
+    private Object[][] dados;
 
-    private JSpinner idSpinner;
-    private JTextField titleField;
-    private JTextField autorField;
-    private JFormattedTextField dtField;
-    private JSpinner qtdSpinner;
+    private JTextField searchField;
+    private JButton    searchButton;
 
-    private JButton addButton;
-    private JButton cleanButton;
-    private JButton closeButton;
+    private JButton    closeButton;
 
-    public Create() {
+    public ListView(Object[][] dados, FrameController frameController) {
 
-        fm = new FontManager();
+        this.handler = new ButtonHandler();
+        this.frameController = frameController;
+        this.dados = dados;
 
-        setPreferredSize(new Dimension(255, 162));
         setLayout(new FlowLayout(FlowLayout.LEFT));
 
         initComponents();
@@ -49,55 +44,78 @@ public class ListView extends JPanel {
 
     private void initComponents() {
 
-        MaskFormatter dtFormatter = null;
-        SpinnerModel model   = new SpinnerNumberModel(0, 0, 70, 1);
-        SpinnerModel modelID = new SpinnerNumberModel(0, 0, 999, 1);
+        String [] colunas = {"ID", "Título", "Autor", "Publicado em", "Quantidade"};
+
+        tableList = new JTable(dados, colunas);
+        tableList.setDefaultEditor(Object.class, null);
+        tableList.getTableHeader().setReorderingAllowed(false); 
+        tableList.getTableHeader().setResizingAllowed(false);
+        JScrollPane scrollPane = new JScrollPane(tableList);
+
+        searchField = new JTextField(10);
+
+        ImageIcon searchIcon = null;
+        ImageIcon searchRollover = null;
 
         try {
-            dtFormatter = new MaskFormatter("##/##/####");
-        } catch (ParseException e) {
+            BufferedImage bImage = ImageIO.read(getClass().getResource("../resources/search.png"));
+            searchIcon = new ImageIcon(bImage);
+
+            bImage = ImageIO.read(getClass().getResource("../resources/searchRollover.png"));
+            searchRollover = new ImageIcon(bImage);
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        idLabel     = new JLabel("   ID:                                                     ");
-        titleLabel  = new JLabel("   Título: ");
-        autorLabel  = new JLabel("   Autor: ");
-        dtLabel     = new JLabel("   Data de Publicação:  ");
-        qtdLabel    = new JLabel("   Quantidade de Exemplares:          ");
-        
-        idSpinner   = new JSpinner(modelID);
-        titleField  = new JTextField(17);
-        autorField  = new JTextField(17);
+        searchButton = new JButton("Buscar", searchIcon);
+        searchButton.setRolloverIcon(searchRollover);
+        searchButton.addActionListener(handler);
 
-        dtField     = new JFormattedTextField(dtFormatter);
-        dtField.setColumns(15);
-        dtField.setFont(fm.getMonospaced());
-
-        qtdSpinner  = new JSpinner(model);
-
-        addButton   = new JButton("Adicionar");
-        cleanButton = new JButton("Limpar");
         closeButton = new JButton("Fechar");
+        closeButton.addActionListener(handler);
 
-        add(idLabel);
-        add(idSpinner);
-        
-        add(titleLabel);
-        add(titleField);
-
-        add(autorLabel);
-        add(autorField);
-
-        add(dtLabel);
-        add(dtField);
-
-        add(qtdLabel);
-        add(qtdSpinner);
-
-        add(addButton);
-        add(cleanButton);
+        add(searchField);
+        add(searchButton);
+        add(Box.createHorizontalStrut(170));
         add(closeButton);
+        add(scrollPane);
 
+    }
+
+    public Object[][] getDados() {
+        return dados;
+    }
+
+    public void setDados(Object[][] dados) {
+        this.dados = dados;
+    }
+
+    public void busca() {
+        if (searchField.getText() != "") {
+            String[][] busca = frameController.buscar(searchField.getText());
+            
+            for (int i = 0; i < busca.length; i++) {
+                for (int j = 0; j < busca[0].length; j++) {
+                    tableList.setValueAt(busca[i][j], i, j);
+                }
+            }
+        }
+    }
+
+    private class ButtonHandler implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+            Object src = e.getSource();
+
+            if (src == searchButton) {
+                busca();
+            } else if (src == closeButton) {
+                frameController.changeToScreen(0, 280, 320);
+            }
+                        
+        }
     }
 
 }
