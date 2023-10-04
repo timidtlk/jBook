@@ -73,10 +73,10 @@ public class ListView extends JPanel {
         ImageIcon searchRollover = null;
 
         try {
-            BufferedImage bImage = ImageIO.read(getClass().getResource("../resources/search.png"));
+            BufferedImage bImage = ImageIO.read(getClass().getClassLoader().getResourceAsStream("search.png"));
             searchIcon = new ImageIcon(bImage);
 
-            bImage = ImageIO.read(getClass().getResource("../resources/searchRollover.png"));
+            bImage = ImageIO.read(getClass().getClassLoader().getResourceAsStream("searchRollover.png"));
             searchRollover = new ImageIcon(bImage);
         } catch (IOException e) {
             e.printStackTrace();

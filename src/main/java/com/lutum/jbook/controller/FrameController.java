@@ -62,7 +62,7 @@ public class FrameController extends JFrame {
         Image icon = null;
 
         try {
-            BufferedImage bImage = ImageIO.read(getClass().getResource("../resources/icon.png"));
+            BufferedImage bImage = ImageIO.read(getClass().getClassLoader().getResourceAsStream("icon.png"));
             icon = bImage;
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,1 +1,15 @@
-com\lutum\jbook\view\MenuView$1.class
+com\lutum\jbook\controller\FrameController.class
+com\lutum\jbook\model\AppModel.class
+com\lutum\jbook\view\DeleteView$ButtonHandler.class
+com\lutum\jbook\view\ListView$ButtonHandler.class
+com\lutum\jbook\JBook.class
+com\lutum\jbook\model\VO\LivroVO.class
+com\lutum\jbook\view\MenuView$ButtonHandler.class
+com\lutum\jbook\view\MenuView.class
+com\lutum\jbook\view\ListView.class
+com\lutum\jbook\view\UpdateView.class
+com\lutum\jbook\view\CreateView.class
+com\lutum\jbook\view\UpdateView$ButtonHandler.class
+com\lutum\jbook\view\DeleteView.class
+com\lutum\jbook\view\utils\FontManager.class
+com\lutum\jbook\view\CreateView$ButtonHandler.class
