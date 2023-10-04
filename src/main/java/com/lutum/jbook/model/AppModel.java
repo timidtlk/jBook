@@ -7,11 +7,18 @@ import java.util.Date;
 
 import com.lutum.jbook.model.VO.LivroVO;
 
+/**
+ * @category Model
+ * 
+ * Controla as funções do ArrayList, como o CRUD inteiro e a criação de registros iniciais
+ */
 public class AppModel {
     
+    // Atributos da Classe
     private ArrayList<LivroVO> livros;
     private SimpleDateFormat formatter;
 
+    // Construtor da Classe AppModel
     public AppModel() {
         this.livros = new ArrayList<>();
 
@@ -40,9 +47,14 @@ public class AppModel {
         this.livros.add(new LivroVO(4, "Harry Potter e a Pedra Filosofal", "J. K. Rowling", harryPoDate, 9));
     }
 
+    /**
+     * Pega todos os dados do Array List e transforma em tabela
+     * 
+     * @return matriz com a tabela
+     */
     public String[][] getDados() {
 
-        String[][] dados = new String[255][5];
+        String[][] dados = new String[256][5];
 
         for (int i = 0; i < dados.length; i++) {       
             if (this.livros.size() > i) {
@@ -57,10 +69,17 @@ public class AppModel {
         return dados;
     }
 
+    /**
+     * Busca um registro de livro no ArrayList
+     * 
+     * @param busca
+     * 
+     * @return Uma matriz com os valores buscados
+     */
     public String[][] buscar(String busca) {
 
         String[][] dadosT  = getDados();
-        String[][] procura = new String[255][5];
+        String[][] procura = new String[256][5];
         int qtdSearch = 0;
 
         for (int i = 0; i < dadosT.length; i++) {
@@ -110,6 +129,12 @@ public class AppModel {
         return "Livro cadastrado com sucesso@suc";
     }
 
+    /**
+     * Verifica se existe um registro de Livro específico no ArrayList
+     * 
+     * @param id
+     * @return
+     */
     public String[] verifica(int id) {
         
         for (LivroVO livroVO : livros) {
@@ -129,6 +154,12 @@ public class AppModel {
 
     }
 
+    /**
+     * Atualiza um objeto no ArrayList com base no seu índice e nas informações novas
+     *  
+     * @param i
+     * @param object
+     */
     public void update(int i, String[] object) {
 
         Date dtPubli = null;
@@ -139,12 +170,38 @@ public class AppModel {
             e.printStackTrace();
         }
 
-        this.livros.set(i, new LivroVO(i, object[0], object[1], dtPubli, Integer.parseInt(object[3])));
+        int id = 0;
+
+        for (LivroVO livroVO : this.livros) {
+            if (livroVO != null) {
+                if (livroVO.getId() == i) {
+                    id = this.livros.indexOf(livroVO);
+                }
+            }
+        }
+
+        this.livros.set(id, new LivroVO(i, object[0], object[1], dtPubli, Integer.parseInt(object[3])));
 
     }
 
+    /**
+     * Remove um objeto no ArrayList com base no seu índice
+     * 
+     * @param i
+     */
     public void delete(int i) {
-        this.livros.remove(i);
+
+        int id = 0;
+
+        for (LivroVO livroVO : this.livros) {
+            if (livroVO != null) {
+                if (livroVO.getId() == i) {
+                    id = this.livros.indexOf(livroVO);
+                }
+            }
+        }
+
+        this.livros.remove(id);
     }
 
 }

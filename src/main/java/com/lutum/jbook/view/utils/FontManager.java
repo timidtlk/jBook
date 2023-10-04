@@ -2,12 +2,21 @@ package com.lutum.jbook.view.utils;
 
 import java.awt.Font;
 
+/**
+ * @category View
+ * 
+ * Gerencia as fontes do View
+ */
 public class FontManager {
     
+    // Atributos da Classe
     private Font title;
     private Font subtitle;
     private Font monospaced;
 
+    /**
+     * Construtor da Classe FontManager
+     */
     public FontManager() {
         
         title = new Font("title", Font.BOLD, 48);
@@ -16,6 +25,7 @@ public class FontManager {
 
     }
 
+    // Getters
     public Font getMonospaced() {
         return monospaced;
     }

@@ -1,7 +1,12 @@
 package com.lutum.jbook.controller;
 
 import java.awt.CardLayout;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -12,8 +17,14 @@ import com.lutum.jbook.view.ListView;
 import com.lutum.jbook.view.MenuView;
 import com.lutum.jbook.view.UpdateView;
 
+/**
+ * @category Controller
+ * 
+ * Controlador dos Frames da APP, conversa com o Model e com o View, além de inicializar o frame e trocar de janelas
+ */
 public class FrameController extends JFrame {
 
+    // Atributos
     private JPanel     layout;
     private AppModel   appModel;
     private MenuView   menuPanel;
@@ -22,8 +33,10 @@ public class FrameController extends JFrame {
     private UpdateView updatePanel;
     private DeleteView deletePanel;
     
+    // Construtor
     public FrameController() {
 
+        // Inicializa os atributos
         appModel    = new AppModel();
         menuPanel   = new MenuView(this);
         createPanel = new CreateView(this);
@@ -31,18 +44,33 @@ public class FrameController extends JFrame {
         updatePanel = new UpdateView(this);
         deletePanel = new DeleteView(this);
 
+        // Inicializa o layout que vai trocar de telas
         layout = new JPanel(new CardLayout());
+
+        // Adiciona os Panel no Layout
         layout.add(menuPanel);
         layout.add(createPanel);
         layout.add(listPanel);
         layout.add(updatePanel);
         layout.add(deletePanel);
 
+        // Configurações do frame
         setTitle("jBook");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
 
-        setSize(280, 320);
+        Image icon = null;
+
+        try {
+            BufferedImage bImage = ImageIO.read(getClass().getResource("../resources/icon.png"));
+            icon = bImage;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        setIconImage(icon);
+
+        setSize(280, 340);
 
         add(layout);
 
@@ -78,27 +106,63 @@ public class FrameController extends JFrame {
         layout.getComponent(screen).setVisible(true);
     }
 
+    /**
+     * Chama o buscar do Model, serve para chamar o buscar através do View
+     * 
+     * @param busca
+     * @return
+     */
     public String[][] buscar(String busca) {
         return appModel.buscar(busca);
     }
 
+    /**
+     * Chama o create do Model, serve para chamar o create através do View
+     * 
+     * @param id
+     * @param titulo
+     * @param autor
+     * @param data
+     * @param qtdExemplares
+     * @return
+     */
     public String create(int id, String titulo, String autor, String data, int qtdExemplares) {
         return appModel.create(id, titulo, autor, data, qtdExemplares);
     }
 
+    /**
+     * Atualiza a tabela do listPanel
+     */
     public void atualizaTabela() {
         listPanel.atualiza();
     }
 
+    /**
+     * Chama o verifica do Model, serve para chamar o verifica através do View
+     * 
+     * @param id
+     * @return
+     */
     public String[] verifica(int id) {
         return appModel.verifica(id);
     }
 
+    /**
+     * Chama o update do Model, serve para chamar o update através do View
+     * 
+     * @param i
+     * @param object
+     */
     public void update(int i, String[] object) {
         appModel.update(i, object);
         listPanel.atualiza();
     }
 
+    /**
+     * Chama o buscar do Model, serve para chamar o buscar através do View
+     * 
+     * @param i
+     */
     public void delete(int i) {
         appModel.delete(i);
         listPanel.atualiza();

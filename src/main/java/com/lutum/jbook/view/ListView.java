@@ -17,12 +17,18 @@ import javax.swing.JTextField;
 
 import com.lutum.jbook.controller.FrameController;
 
+/**
+ * @category View
+ * 
+ * Panel de Listar registros do ArrayList
+ */
 public class ListView extends JPanel {
     
+    // Atributos da Classe
     private ButtonHandler   handler;
     private FrameController frameController;
 
-    private JTable tableList;
+    private JTable     tableList;
     private Object[][] dados;
 
     private JTextField searchField;
@@ -30,6 +36,12 @@ public class ListView extends JPanel {
 
     private JButton    closeButton;
 
+    /**
+     * Construtor da classe ListView
+     * 
+     * @param dados
+     * @param frameController
+     */
     public ListView(Object[][] dados, FrameController frameController) {
 
         this.handler = new ButtonHandler();
@@ -42,6 +54,9 @@ public class ListView extends JPanel {
 
     }
 
+    /**
+     * Inicia os Componentes da classe DeleteView
+     */
     private void initComponents() {
 
         String [] colunas = {"ID", "Título", "Autor", "Publicado em", "Quantidade"};
@@ -82,14 +97,9 @@ public class ListView extends JPanel {
 
     }
 
-    public Object[][] getDados() {
-        return dados;
-    }
-
-    public void setDados(Object[][] dados) {
-        this.dados = dados;
-    }
-
+    /**
+     * Busca os registros compatíveis com a consulta no ArrayList
+     */
     public void busca() {
         if (searchField.getText() != "") {
             String[][] busca = frameController.buscar(searchField.getText());
@@ -102,6 +112,9 @@ public class ListView extends JPanel {
         }
     }
 
+    /** 
+     * Atualiza a tabela com base no ArrayList
+     */
     public void atualiza() {
         String[][] busca = frameController.buscar("");
         
@@ -112,6 +125,9 @@ public class ListView extends JPanel {
         }
     }
 
+    /**
+     * Classe que lida com os botões do ListView
+     */
     private class ButtonHandler implements ActionListener {
 
         @Override
@@ -122,10 +138,19 @@ public class ListView extends JPanel {
             if (src == searchButton) {
                 busca();
             } else if (src == closeButton) {
-                frameController.changeToScreen(0, 280, 320);
+                frameController.changeToScreen(0, 280, 340);
             }
                         
         }
+    }
+
+    // Getters e Setters
+    public Object[][] getDados() {
+        return dados;
+    }
+
+    public void setDados(Object[][] dados) {
+        this.dados = dados;
     }
 
 }

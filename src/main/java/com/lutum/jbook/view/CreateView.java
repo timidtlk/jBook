@@ -1,9 +1,8 @@
 package com.lutum.jbook.view;
 
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Calendar;
@@ -22,8 +21,14 @@ import javax.swing.text.MaskFormatter;
 import com.lutum.jbook.controller.FrameController;
 import com.lutum.jbook.view.utils.FontManager;
 
+/**
+ * @category View
+ * 
+ * Panel de Criar registro no ArrayList
+ */
 public class CreateView extends JPanel {
     
+    // Atributos da Classe
     private ButtonHandler handler;
     private FrameController frameController;
     private FontManager fm;
@@ -47,6 +52,11 @@ public class CreateView extends JPanel {
     private JButton cleanButton;
     private JButton closeButton;
 
+    /**
+     * Construtor da classe CreateView
+     * 
+     * @param frameController
+     */
     public CreateView(FrameController frameController) {
 
         this.calendar = Calendar.getInstance();
@@ -61,13 +71,14 @@ public class CreateView extends JPanel {
 
     }
 
+    /**
+     * Inicia os Componentes da classe CreateView
+     */
     private void initComponents() {
 
         MaskFormatter dtFormatter = null;
         SpinnerModel model   = new SpinnerNumberModel(0, 0, 70, 1);
         SpinnerModel modelID = new SpinnerNumberModel(0, 0, 999, 1);
-
-        
 
         try {
             dtFormatter = new MaskFormatter("##/##/####");
@@ -121,6 +132,9 @@ public class CreateView extends JPanel {
 
     }
 
+    /**
+     * Limpa todos os campos do CreateView
+     */
     protected void clean() {
 
         idSpinner.setValue(0);
@@ -131,6 +145,9 @@ public class CreateView extends JPanel {
 
     }
 
+    /**
+     * Serve para criar o registro no ArrayList, chamando o Controller para fazer esse registro
+     */
     protected void create() {
         
         int id        = (int) idSpinner.getValue();
@@ -160,10 +177,14 @@ public class CreateView extends JPanel {
 
         frameController.atualizaTabela();
         JOptionPane.showMessageDialog(null, message[0], titleMessage, type);
-        clean();
+        if (type != JOptionPane.ERROR_MESSAGE) 
+            clean();
 
     }
 
+    /**
+     * Classe que lida com os botões do CreateView
+     */
     private class ButtonHandler implements ActionListener {
 
         @Override
@@ -174,7 +195,7 @@ public class CreateView extends JPanel {
             if (src == cleanButton) {
                 clean();
             } else if (src == closeButton) {
-                frameController.changeToScreen(0, 280, 320);
+                frameController.changeToScreen(0, 280, 340);
             } else {
                 create();
             }

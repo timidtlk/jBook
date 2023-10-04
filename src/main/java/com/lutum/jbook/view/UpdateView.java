@@ -1,9 +1,8 @@
 package com.lutum.jbook.view;
 
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Calendar;
@@ -22,8 +21,14 @@ import javax.swing.text.MaskFormatter;
 import com.lutum.jbook.controller.FrameController;
 import com.lutum.jbook.view.utils.FontManager;
 
+/**
+ * @category View
+ * 
+ *  Panel de Atualizar registros do ArrayList
+ */
 public class UpdateView extends JPanel {
     
+    // Atributos da Classe
     private ButtonHandler handler;
     private FrameController frameController;
     private FontManager fm;
@@ -48,6 +53,11 @@ public class UpdateView extends JPanel {
     private JButton cleanButton;
     private JButton closeButton;
 
+    /**
+     * Construtor da Classe UpdateView
+     * 
+     * @param frameController
+     */
     public UpdateView(FrameController frameController) {
 
         this.calendar = Calendar.getInstance();
@@ -62,6 +72,9 @@ public class UpdateView extends JPanel {
 
     }
 
+    /**
+     * Inicia os Componentes da classe UpdateView
+     */
     private void initComponents() {
 
         MaskFormatter dtFormatter = null;
@@ -131,6 +144,9 @@ public class UpdateView extends JPanel {
 
     }
 
+    /**
+     * Limpa todos os campos do UpdateView
+     */
     protected void clean() {
 
         idSpinner.setValue(0);
@@ -148,6 +164,9 @@ public class UpdateView extends JPanel {
 
     }
 
+    /**
+     * Verifica se o ID inserido existe no ArrayList
+     */
     protected void verifica() {
         
         String[] exists = frameController.verifica((int) idSpinner.getValue());
@@ -169,6 +188,9 @@ public class UpdateView extends JPanel {
 
     }
 
+    /**
+     * Atualiza um livro registrado no ArrayList
+     */
     protected void update() {
 
         int input = JOptionPane.showConfirmDialog(null,"Confirme a ação de atualizar um livro", "Confirma",JOptionPane.YES_NO_OPTION);
@@ -186,12 +208,13 @@ public class UpdateView extends JPanel {
             JOptionPane.showMessageDialog(null, "Livro atualizado com sucesso", "Atualizado", JOptionPane.PLAIN_MESSAGE);
 
             clean();
-        } else {
-            clean();
         }
 
     }
 
+    /**
+     * Classe que lida com os botões do UpdateView    
+     */
     private class ButtonHandler implements ActionListener {
 
         @Override
@@ -202,7 +225,7 @@ public class UpdateView extends JPanel {
             if (src == cleanButton) {
                 clean();
             } else if (src == closeButton) {
-                frameController.changeToScreen(0, 280, 320);
+                frameController.changeToScreen(0, 280, 340);
             } else if (src == confirmButton) {
                 verifica();
             } else {

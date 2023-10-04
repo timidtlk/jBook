@@ -14,6 +14,11 @@ import javax.swing.JPanel;
 import com.lutum.jbook.controller.FrameController;
 import com.lutum.jbook.view.utils.FontManager;
 
+/**
+ * @category View
+ * 
+ * Panel de Menu da Aplicação
+ */
 public class MenuView extends JPanel {
 
     private ButtonHandler handler;
@@ -27,6 +32,7 @@ public class MenuView extends JPanel {
     private JButton readButton;
     private JButton updateButton;
     private JButton deleteButton;
+    private JButton closeButton;
 
     /**
      * Para conseguir trocar de telas, todas as classes de painel recebem o frameController para poderem trocar de telas
@@ -47,6 +53,9 @@ public class MenuView extends JPanel {
 
     }
 
+    /**
+     * Inicia os Componentes da classe DeleteView
+     */
     private void initComponents() {
         titleLabel = new JLabel("jBook");
         subTitleLabel = new JLabel("Feito por Gustavo Gil e Emilly Caxias");
@@ -73,6 +82,10 @@ public class MenuView extends JPanel {
         deleteButton.setAlignmentX(CENTER_ALIGNMENT);
         deleteButton.addActionListener(handler);
 
+        closeButton  = new JButton("Sair");
+        closeButton.setAlignmentX(CENTER_ALIGNMENT);
+        closeButton.addActionListener(handler);
+
         add(titleLabel);
         add(subTitleLabel);
         add(Box.createVerticalStrut(25));
@@ -83,8 +96,13 @@ public class MenuView extends JPanel {
         add(readButton);
         add(Box.createVerticalStrut(6));
         add(deleteButton);
+        add(Box.createVerticalStrut(6));
+        add(closeButton);
     }
 
+    /**
+     * Classe que lida com os botões do MenuView    
+     */
     private class ButtonHandler implements ActionListener {
 
         @Override
@@ -95,11 +113,14 @@ public class MenuView extends JPanel {
             if (src == createButton) {
                 frameController.changeToScreen(1, 270, 200);
             } else if (src == readButton) {
-                frameController.changeToScreen(2,494, 503);
+                frameController.changeToScreen(2, 494, 502);
             } else if (src == updateButton) {
                 frameController.changeToScreen(3, 270, 207);
-            } else {
+            } else if (src == deleteButton) {
                 frameController.changeToScreen(4, 270, 207);
+            } else {
+                frameController.dispose();
+                System.exit(0);
             }
                         
         }

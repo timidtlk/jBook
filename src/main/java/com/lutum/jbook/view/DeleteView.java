@@ -2,7 +2,6 @@ package com.lutum.jbook.view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -22,8 +21,14 @@ import javax.swing.text.MaskFormatter;
 import com.lutum.jbook.controller.FrameController;
 import com.lutum.jbook.view.utils.FontManager;
 
+/**
+ * @category View
+ * 
+ * Panel de Deletar registro do ArrayList
+ */
 public class DeleteView extends JPanel {
     
+    // Atributos da Classe
     private ButtonHandler handler;
     private FrameController frameController;
     private FontManager fm;
@@ -48,6 +53,11 @@ public class DeleteView extends JPanel {
     private JButton cleanButton;
     private JButton closeButton;
 
+    /**
+     * Construtor da Classe DeleteView
+     * 
+     * @param frameController
+     */
     public DeleteView(FrameController frameController) {
 
         this.calendar = Calendar.getInstance();
@@ -62,6 +72,9 @@ public class DeleteView extends JPanel {
 
     }
 
+    /**
+     * Inicia os Componentes da classe DeleteView
+     */
     private void initComponents() {
 
         MaskFormatter dtFormatter = null;
@@ -131,6 +144,9 @@ public class DeleteView extends JPanel {
 
     }
 
+    /**
+     * Limpa todos os campos do DeleteView
+     */
     protected void clean() {
 
         idSpinner.setValue(0);
@@ -148,6 +164,9 @@ public class DeleteView extends JPanel {
 
     }
 
+    /**
+     * Verifica se o ID inserido existe no ArrayList
+     */
     protected void verifica() {
         
         String[] exists = frameController.verifica((int) idSpinner.getValue());
@@ -165,6 +184,9 @@ public class DeleteView extends JPanel {
 
     }
 
+    /**
+     * Deleta um livro registrado no ArrayList
+     */
     protected void delete() {
 
         int input = JOptionPane.showConfirmDialog(null,"Confirme a ação de remover um livro do registro", "Confirma",JOptionPane.YES_NO_OPTION);
@@ -180,6 +202,9 @@ public class DeleteView extends JPanel {
         }
     }
 
+    /**
+     * Classe que lida com os botões do DeleteView
+     */
     private class ButtonHandler implements ActionListener {
 
         @Override
@@ -190,7 +215,7 @@ public class DeleteView extends JPanel {
             if (src == cleanButton) {
                 clean();
             } else if (src == closeButton) {
-                frameController.changeToScreen(0, 280, 320);
+                frameController.changeToScreen(0, 280, 340);
             } else if (src == confirmButton) {
                 verifica();
             } else {
