@@ -143,7 +143,7 @@ public class CreateView extends JPanel {
         String[] message = create.split("@");
 
         int type = JOptionPane.PLAIN_MESSAGE;
-        String titleMessage = "Sucesso";
+        String titleMessage = "Cadastrado";
 
         switch (message[1]) {
             case "err":

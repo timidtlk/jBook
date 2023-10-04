@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 
 import com.lutum.jbook.model.AppModel;
 import com.lutum.jbook.view.CreateView;
+import com.lutum.jbook.view.DeleteView;
 import com.lutum.jbook.view.ListView;
 import com.lutum.jbook.view.MenuView;
 import com.lutum.jbook.view.UpdateView;
@@ -19,6 +20,7 @@ public class FrameController extends JFrame {
     private CreateView createPanel;
     private ListView   listPanel;
     private UpdateView updatePanel;
+    private DeleteView deletePanel;
     
     public FrameController() {
 
@@ -27,12 +29,14 @@ public class FrameController extends JFrame {
         createPanel = new CreateView(this);
         listPanel   = new ListView(appModel.getDados(), this);
         updatePanel = new UpdateView(this);
+        deletePanel = new DeleteView(this);
 
         layout = new JPanel(new CardLayout());
         layout.add(menuPanel);
         layout.add(createPanel);
         layout.add(listPanel);
         layout.add(updatePanel);
+        layout.add(deletePanel);
 
         setTitle("jBook");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -83,6 +87,20 @@ public class FrameController extends JFrame {
     }
 
     public void atualizaTabela() {
+        listPanel.atualiza();
+    }
+
+    public String[] verifica(int id) {
+        return appModel.verifica(id);
+    }
+
+    public void update(int i, String[] object) {
+        appModel.update(i, object);
+        listPanel.atualiza();
+    }
+
+    public void delete(int i) {
+        appModel.delete(i);
         listPanel.atualiza();
     }
 }

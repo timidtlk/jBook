@@ -22,7 +22,7 @@ import javax.swing.text.MaskFormatter;
 import com.lutum.jbook.controller.FrameController;
 import com.lutum.jbook.view.utils.FontManager;
 
-public class UpdateView extends JPanel {
+public class DeleteView extends JPanel {
     
     private ButtonHandler handler;
     private FrameController frameController;
@@ -44,11 +44,11 @@ public class UpdateView extends JPanel {
     private JSpinner qtdSpinner;
 
     private JButton confirmButton;
-    private JButton updateButton;
+    private JButton deleteButton;
     private JButton cleanButton;
     private JButton closeButton;
 
-    public UpdateView(FrameController frameController) {
+    public DeleteView(FrameController frameController) {
 
         this.calendar = Calendar.getInstance();
         this.decFormat = new DecimalFormat("00");
@@ -97,16 +97,16 @@ public class UpdateView extends JPanel {
         qtdSpinner.setEnabled(false);
 
         confirmButton = new JButton("Buscar");
-        updateButton  = new JButton("Atualizar");
+        deleteButton  = new JButton("Remover");
         cleanButton   = new JButton("Limpar");
         closeButton   = new JButton("Fechar");
 
         confirmButton.addActionListener(handler);
-        updateButton.addActionListener(handler);
+        deleteButton.addActionListener(handler);
         cleanButton.addActionListener(handler);
         closeButton.addActionListener(handler);
 
-        updateButton.setEnabled(false);
+        deleteButton.setEnabled(false);
 
         add(idLabel);
         add(idSpinner);
@@ -125,7 +125,7 @@ public class UpdateView extends JPanel {
         add(qtdLabel);
         add(qtdSpinner);
 
-        add(updateButton);
+        add(deleteButton);
         add(cleanButton);
         add(closeButton);
 
@@ -144,7 +144,7 @@ public class UpdateView extends JPanel {
         dtField.setEnabled(false);
         qtdSpinner.setEnabled(false);
 
-        updateButton.setEnabled(false);
+        deleteButton.setEnabled(false);
 
     }
 
@@ -153,12 +153,8 @@ public class UpdateView extends JPanel {
         String[] exists = frameController.verifica((int) idSpinner.getValue());
 
         if (exists != null) {
-            titleField.setEnabled(true);
-            autorField.setEnabled(true);
-            dtField.setEnabled(true);
-            qtdSpinner.setEnabled(true);
-            updateButton.setEnabled(true);
-
+            deleteButton.setEnabled(true);
+            
             titleField.setText(exists[0]);
             autorField.setText(exists[1]);
             dtField.setText(exists[2]);
@@ -169,27 +165,19 @@ public class UpdateView extends JPanel {
 
     }
 
-    protected void update() {
+    protected void delete() {
 
-        int input = JOptionPane.showConfirmDialog(null,"Confirme a ação de atualizar um livro", "Confirma",JOptionPane.YES_NO_OPTION);
+        int input = JOptionPane.showConfirmDialog(null,"Confirme a ação de remover um livro do registro", "Confirma",JOptionPane.YES_NO_OPTION);
 
         if (input == 0) {
-            String[] object = new String[4];
+            frameController.delete(Integer.parseInt(String.valueOf(idSpinner.getValue())));
 
-            object[0] = titleField.getText();
-            object[1] = autorField.getText();
-            object[2] = dtField.getText();
-            object[3] = String.valueOf(qtdSpinner.getValue());
-
-            frameController.update(Integer.parseInt(String.valueOf(idSpinner.getValue())), object);
-
-            JOptionPane.showMessageDialog(null, "Livro atualizado com sucesso", "Atualizado", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Livro removido com sucesso", "Removido", JOptionPane.PLAIN_MESSAGE);
 
             clean();
         } else {
             clean();
         }
-
     }
 
     private class ButtonHandler implements ActionListener {
@@ -206,7 +194,7 @@ public class UpdateView extends JPanel {
             } else if (src == confirmButton) {
                 verifica();
             } else {
-                update();
+                delete();
             }
                         
         }

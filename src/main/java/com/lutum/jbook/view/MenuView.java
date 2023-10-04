@@ -71,6 +71,7 @@ public class MenuView extends JPanel {
 
         deleteButton = new JButton("Remover Livro");
         deleteButton.setAlignmentX(CENTER_ALIGNMENT);
+        deleteButton.addActionListener(handler);
 
         add(titleLabel);
         add(subTitleLabel);
@@ -97,6 +98,8 @@ public class MenuView extends JPanel {
                 frameController.changeToScreen(2,494, 503);
             } else if (src == updateButton) {
                 frameController.changeToScreen(3, 270, 207);
+            } else {
+                frameController.changeToScreen(4, 270, 207);
             }
                         
         }

@@ -49,4 +49,10 @@ public class LivroVO {
         this.qtdExemplares = qtdExemplares;
     }
 
+    @Override
+    public String toString() {
+        return "LivroVO [id=" + id + ", titulo=" + titulo + ", autor=" + autor + ", dtPublicacao=" + dtPublicacao
+                + ", qtdExemplares=" + qtdExemplares + "]";
+    }
+
 }

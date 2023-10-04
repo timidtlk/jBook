@@ -5,8 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.swing.text.MaskFormatter;
-
 import com.lutum.jbook.model.VO.LivroVO;
 
 public class AppModel {
@@ -23,12 +21,14 @@ public class AppModel {
         Date existenDate = null;
         Date budapesDate = null;
         Date aboboraDate = null;
+        Date harryPoDate = null;
 
         try {
             capitalDate = formatter.parse("14/09/1867");
             existenDate = formatter.parse("29/10/1945");
             budapesDate = formatter.parse("10/09/2003");
             aboboraDate = formatter.parse("01/11/2010");
+            harryPoDate = formatter.parse("26/06/1997");
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -37,11 +37,11 @@ public class AppModel {
         this.livros.add(new LivroVO(1, "O Existencialismo é Humanismo", "Jean-Paul Sartre", existenDate, 5));
         this.livros.add(new LivroVO(2, "Budapeste", "Chico Buarque", budapesDate, 13));
         this.livros.add(new LivroVO(3, "As Duas Faces Da Abobora", "Caco Porto", aboboraDate, 7));
+        this.livros.add(new LivroVO(4, "Harry Potter e a Pedra Filosofal", "J. K. Rowling", harryPoDate, 9));
     }
 
     public String[][] getDados() {
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String[][] dados = new String[255][5];
 
         for (int i = 0; i < dados.length; i++) {       
@@ -49,7 +49,7 @@ public class AppModel {
                 dados[i][0] = String.valueOf(this.livros.get(i).getId());
                 dados[i][1] = String.valueOf(this.livros.get(i).getTitulo());
                 dados[i][2] = String.valueOf(this.livros.get(i).getAutor());
-                dados[i][3] = String.valueOf(simpleDateFormat.format(this.livros.get(i).getDtPublicacao()));
+                dados[i][3] = String.valueOf(this.formatter.format(this.livros.get(i).getDtPublicacao()));
                 dados[i][4] = String.valueOf(this.livros.get(i).getQtdExemplares());
             }
         }
@@ -108,6 +108,43 @@ public class AppModel {
         this.livros.add(new LivroVO(id, titulo, autor, dtPubli, qtdExemplares));
         
         return "Livro cadastrado com sucesso@suc";
+    }
+
+    public String[] verifica(int id) {
+        
+        for (LivroVO livroVO : livros) {
+            if (livroVO.getId() == id) {
+                String[] temp = new String[4];
+                
+                temp[0] = livroVO.getTitulo();
+                temp[1] = livroVO.getAutor();
+                temp[2] = String.valueOf(formatter.format(livroVO.getDtPublicacao()));
+                temp[3] = String.valueOf(livroVO.getQtdExemplares());
+
+                return temp;
+            }
+        }
+
+        return null;
+
+    }
+
+    public void update(int i, String[] object) {
+
+        Date dtPubli = null;
+
+        try {
+            dtPubli = formatter.parse(object[2]);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        this.livros.set(i, new LivroVO(i, object[0], object[1], dtPubli, Integer.parseInt(object[3])));
+
+    }
+
+    public void delete(int i) {
+        this.livros.remove(i);
     }
 
 }
