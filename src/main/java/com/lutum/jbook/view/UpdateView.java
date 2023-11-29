@@ -169,7 +169,7 @@ public class UpdateView extends JPanel {
      */
     protected void verifica() {
         
-        String[] exists = frameController.verifica((int) idSpinner.getValue());
+        Object[] exists = frameController.verifica((int) idSpinner.getValue());
 
         if (exists != null) {
             titleField.setEnabled(true);
@@ -178,10 +178,10 @@ public class UpdateView extends JPanel {
             qtdSpinner.setEnabled(true);
             updateButton.setEnabled(true);
 
-            titleField.setText(exists[0]);
-            autorField.setText(exists[1]);
-            dtField.setText(exists[2]);
-            qtdSpinner.setValue(Integer.parseInt(exists[3]));
+            titleField.setText(String.valueOf(exists[1]));
+            autorField.setText(String.valueOf(exists[2]));
+            dtField.setText(String.valueOf(exists[3]));
+            qtdSpinner.setValue(Integer.parseInt(String.valueOf(exists[4])));
         } else {
             JOptionPane.showMessageDialog(null, "Não existe livro cadastrado com esse ID", "Erro", JOptionPane.ERROR_MESSAGE);
         }

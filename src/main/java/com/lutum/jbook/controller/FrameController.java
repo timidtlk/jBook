@@ -143,7 +143,7 @@ public class FrameController extends JFrame {
      * @param id
      * @return
      */
-    public String[] verifica(int id) {
+    public Object[] verifica(int id) {
         return appModel.verifica(id);
     }
 

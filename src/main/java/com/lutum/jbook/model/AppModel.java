@@ -1,26 +1,34 @@
 package com.lutum.jbook.model;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
 import com.lutum.jbook.model.VO.LivroVO;
+import com.lutum.jbook.model.db.ConnectDB;
 
 /**
  * @category Model
  * 
  * Controla as funções do ArrayList, como o CRUD inteiro e a criação de registros iniciais
  */
-public class AppModel {
+public class AppModel extends ConnectDB {
     
     // Atributos da Classe
     private ArrayList<LivroVO> livros;
     private SimpleDateFormat formatter;
+    private Connection connect;
 
     // Construtor da Classe AppModel
     public AppModel() {
         this.livros = new ArrayList<>();
+        this.connect = super.connectDB();
 
         formatter = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -54,19 +62,32 @@ public class AppModel {
      */
     public String[][] getDados() {
 
-        String[][] dados = new String[256][5];
+        String[][] procura = new String[256][5];
 
-        for (int i = 0; i < dados.length; i++) {       
-            if (this.livros.size() > i) {
-                dados[i][0] = String.valueOf(this.livros.get(i).getId());
-                dados[i][1] = String.valueOf(this.livros.get(i).getTitulo());
-                dados[i][2] = String.valueOf(this.livros.get(i).getAutor());
-                dados[i][3] = String.valueOf(this.formatter.format(this.livros.get(i).getDtPublicacao()));
-                dados[i][4] = String.valueOf(this.livros.get(i).getQtdExemplares());
+        try {
+            String query = "SELECT * FROM Livros";
+            ResultSet rs = connect.prepareStatement(query).executeQuery();
+
+            ArrayList<LivroVO> livroVOs = new ArrayList<>();
+
+            SimpleDateFormat americanFormatter = new SimpleDateFormat("yyyy-MM-dd");
+
+            if (rs.next()) {
+                livroVOs.add(new LivroVO(rs.getInt(1), rs.getString(2), rs.getString(3), americanFormatter.parse(rs.getDate(4).toString()), rs.getInt(5)));
             }
+
+            for (int i = 0; i < livroVOs.size(); i++) {
+                procura[i][0] = String.valueOf(livroVOs.get(i).getId());
+                procura[i][1] = String.valueOf(livroVOs.get(i).getTitulo());
+                procura[i][2] = String.valueOf(livroVOs.get(i).getAutor());
+                procura[i][3] = formatter.format(livroVOs.get(i).getDtPublicacao());
+                procura[i][4] = String.valueOf(livroVOs.get(i).getQtdExemplares());
+            }
+        } catch (SQLException | ParseException e) {
+            e.printStackTrace();
         }
 
-        return dados;
+        return procura;
     }
 
     /**
@@ -78,15 +99,29 @@ public class AppModel {
      */
     public String[][] buscar(String busca) {
 
-        String[][] dadosT  = getDados();
         String[][] procura = new String[256][5];
-        int qtdSearch = 0;
 
-        for (int i = 0; i < dadosT.length; i++) {
-            if (dadosT[i][1] != null) {
-                if (dadosT[i][1].toLowerCase().contains(busca.toLowerCase()))
-                    procura[qtdSearch++] = dadosT[i];
+        try {
+            String query = "SELECT * FROM Livros WHERE titulo LIKE '%" + busca + "%'";
+            ResultSet rs = connect.prepareStatement(query).executeQuery();
+
+            ArrayList<LivroVO> livroVOs = new ArrayList<>();
+
+            SimpleDateFormat americanFormatter = new SimpleDateFormat("yyyy-MM-dd");
+
+            if (rs.next()) {
+                livroVOs.add(new LivroVO(rs.getInt(1), rs.getString(2), rs.getString(3), americanFormatter.parse(rs.getDate(4).toString()), rs.getInt(5)));
             }
+
+            for (int i = 0; i < livroVOs.size(); i++) {
+                procura[i][0] = String.valueOf(livroVOs.get(i).getId());
+                procura[i][1] = String.valueOf(livroVOs.get(i).getTitulo());
+                procura[i][2] = String.valueOf(livroVOs.get(i).getAutor());
+                procura[i][3] = formatter.format(livroVOs.get(i).getDtPublicacao());
+                procura[i][4] = String.valueOf(livroVOs.get(i).getQtdExemplares());
+            }
+        } catch (SQLException | ParseException e) {
+            e.printStackTrace();
         }
 
         return procura;
@@ -110,21 +145,33 @@ public class AppModel {
             return "Preencha todos os campos para cadastrar um livro@inf";
         }
 
-        for (LivroVO livro : this.livros) {
-            if (livro.getId() == id) {
+        try {
+            String id_query = "SELECT id FROM Livros WHERE id = ?";
+            PreparedStatement id_pstm = connect.prepareStatement(id_query);
+            id_pstm.setInt(1, id);
+            ResultSet id_rs = id_pstm.getResultSet();
+
+            if (id_rs != null) {
                 return "Já existe um livro cadastrado com esse ID@err";
             }
+        } catch (SQLException e1) {
+            return "Ocorreu um erro: "+ e1.getMessage() +"@err";
         }
-
-        Date dtPubli = null;
-
+        
         try {
-            dtPubli = formatter.parse(data);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+            String query = "INSERT INTO Livros(id, titulo, autor, dtPublicacao, qtdExemplares) VALUES (?, ?, ?, STR_TO_DATE(?, '%d/%m/%Y'), ?)";
+            PreparedStatement pstm = connect.prepareStatement(query);
 
-        this.livros.add(new LivroVO(id, titulo, autor, dtPubli, qtdExemplares));
+            pstm.setInt(1, id);
+            pstm.setString(2, titulo);
+            pstm.setString(3, autor);
+            pstm.setString(4, data);
+            pstm.setInt(5, qtdExemplares);
+
+            pstm.execute();
+        } catch (SQLException e) {
+            return "Ocorreu um erro: "+ e.getMessage() +"@err";
+        }
         
         return "Livro cadastrado com sucesso@suc";
     }
@@ -135,23 +182,31 @@ public class AppModel {
      * @param id
      * @return
      */
-    public String[] verifica(int id) {
+    public Object[] verifica(int id) {
         
-        for (LivroVO livroVO : livros) {
-            if (livroVO.getId() == id) {
-                String[] temp = new String[4];
-                
-                temp[0] = livroVO.getTitulo();
-                temp[1] = livroVO.getAutor();
-                temp[2] = String.valueOf(formatter.format(livroVO.getDtPublicacao()));
-                temp[3] = String.valueOf(livroVO.getQtdExemplares());
+        try {
+            String id_query = "SELECT * FROM Livros WHERE id = ?";
+            PreparedStatement id_pstm = connect.prepareStatement(id_query);
+            id_pstm.setInt(1, id);
+            ResultSet id_rs = id_pstm.executeQuery();
 
-                return temp;
+            if (id_rs == null) {
+                return null;
+            } else {
+                ArrayList<LivroVO> livroVOs = new ArrayList<>();
+
+                SimpleDateFormat americanFormatter = new SimpleDateFormat("yyyy-MM-dd");
+
+                if (id_rs.next()) {
+                    livroVOs.add(new LivroVO(id_rs.getInt(1), id_rs.getString(2), id_rs.getString(3), americanFormatter.parse(id_rs.getDate(4).toString()), id_rs.getInt(5)));
+                }
+
+                return livroVOs.toArray();
             }
+        } catch (SQLException | ParseException e1) {
+            e1.printStackTrace();
+            return null;
         }
-
-        return null;
-
     }
 
     /**
