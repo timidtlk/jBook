@@ -6,9 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+
+import javax.swing.JOptionPane;
 
 import com.lutum.jbook.model.VO.LivroVO;
 import com.lutum.jbook.model.db.ConnectDB;
@@ -72,7 +73,7 @@ public class AppModel extends ConnectDB {
 
             SimpleDateFormat americanFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
-            if (rs.next()) {
+            while (rs.next()) {
                 livroVOs.add(new LivroVO(rs.getInt(1), rs.getString(2), rs.getString(3), americanFormatter.parse(rs.getDate(4).toString()), rs.getInt(5)));
             }
 
@@ -109,7 +110,7 @@ public class AppModel extends ConnectDB {
 
             SimpleDateFormat americanFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
-            if (rs.next()) {
+            while (rs.next()) {
                 livroVOs.add(new LivroVO(rs.getInt(1), rs.getString(2), rs.getString(3), americanFormatter.parse(rs.getDate(4).toString()), rs.getInt(5)));
             }
 
@@ -168,7 +169,7 @@ public class AppModel extends ConnectDB {
             pstm.setString(4, data);
             pstm.setInt(5, qtdExemplares);
 
-            pstm.execute();
+            pstm.executeUpdate();
         } catch (SQLException e) {
             return "Ocorreu um erro: "+ e.getMessage() +"@err";
         }
@@ -193,17 +194,19 @@ public class AppModel extends ConnectDB {
             if (id_rs == null) {
                 return null;
             } else {
-                ArrayList<LivroVO> livroVOs = new ArrayList<>();
-
-                SimpleDateFormat americanFormatter = new SimpleDateFormat("yyyy-MM-dd");
+                ArrayList<String> livroVOs = new ArrayList<>();
 
                 if (id_rs.next()) {
-                    livroVOs.add(new LivroVO(id_rs.getInt(1), id_rs.getString(2), id_rs.getString(3), americanFormatter.parse(id_rs.getDate(4).toString()), id_rs.getInt(5)));
+                    livroVOs.add(String.valueOf(id_rs.getInt(1)));
+                    livroVOs.add(id_rs.getString(2));
+                    livroVOs.add(id_rs.getString(3));
+                    livroVOs.add(String.valueOf(formatter.format(id_rs.getDate(4))));
+                    livroVOs.add(String.valueOf(id_rs.getInt(5)));
                 }
 
                 return livroVOs.toArray();
             }
-        } catch (SQLException | ParseException e1) {
+        } catch (SQLException e1) {
             e1.printStackTrace();
             return null;
         }
@@ -217,25 +220,23 @@ public class AppModel extends ConnectDB {
      */
     public void update(int i, String[] object) {
 
-        Date dtPubli = null;
-
         try {
-            dtPubli = formatter.parse(object[2]);
-        } catch (ParseException e) {
+            LivroVO livro = new LivroVO(i, object[0], object[1], formatter.parse(object[2]), Integer.parseInt(object[3]));
+
+            String query = "UPDATE Livros SET titulo=?, autor=?, dtPublicacao=STR_TO_DATE(?, '%d/%m/%Y'), qtdExemplares=? WHERE id = ?";
+            PreparedStatement pstm = connect.prepareStatement(query);
+
+            pstm.setString(1, livro.getTitulo());
+            pstm.setString(2, livro.getAutor());
+            pstm.setString(3, String.valueOf(formatter.format(livro.getDtPublicacao()) ));
+            pstm.setInt(4, livro.getQtdExemplares());
+            pstm.setInt(5, i);
+
+            pstm.executeUpdate();
+
+        } catch (NumberFormatException | ParseException | SQLException e) {
             e.printStackTrace();
         }
-
-        int id = 0;
-
-        for (LivroVO livroVO : this.livros) {
-            if (livroVO != null) {
-                if (livroVO.getId() == i) {
-                    id = this.livros.indexOf(livroVO);
-                }
-            }
-        }
-
-        this.livros.set(id, new LivroVO(i, object[0], object[1], dtPubli, Integer.parseInt(object[3])));
 
     }
 
@@ -246,17 +247,15 @@ public class AppModel extends ConnectDB {
      */
     public void delete(int i) {
 
-        int id = 0;
-
-        for (LivroVO livroVO : this.livros) {
-            if (livroVO != null) {
-                if (livroVO.getId() == i) {
-                    id = this.livros.indexOf(livroVO);
-                }
-            }
+        try {
+            
+            String query = "DELETE FROM Livros WHERE id = ?";
+            PreparedStatement pstm = connect.prepareStatement(query);
+            pstm.setInt(1, i);
+            pstm.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-        this.livros.remove(id);
     }
 
 }
